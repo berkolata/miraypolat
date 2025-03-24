@@ -1,0 +1,37 @@
+# PHP ve HTML uzantılarını kaldır
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^(.*)$ $1.php [L]
+
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}.html -f
+RewriteRule ^(.*)$ $1.html [L]
+
+# index.php'yi gizle
+RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /index\.php
+RewriteRule ^index\.php$ / [L,R=301]
+
+# Resim ve medya dosyalarına erişim izni
+<FilesMatch "\.(jpg|jpeg|png|gif|svg|webp|pdf|ico)$">
+    Order Allow,Deny
+    Allow from all
+</FilesMatch>
+
+# Uploads klasörüne erişim izni
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{REQUEST_URI} ^/uploads/
+    RewriteRule .* - [L]
+</IfModule>
+
+# CORS politikası (gerekirse)
+<IfModule mod_headers.c>
+    Header set Access-Control-Allow-Origin "*"
+</IfModule>
+
+# Dizin listelemeyi kapat
+Options -Indexes
+
+# PHP hata gösterimini kapat (production'da)
+php_flag display_errors off

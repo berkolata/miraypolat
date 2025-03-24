@@ -1,0 +1,793 @@
+@import "locomotive-scroll/dist/locomotive-scroll.css";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  
+  @font-face {
+    font-family: 'Canela Deck';
+    src: url('../fonts/CanelaDeck-Regular.woff2') format('woff2'),
+         url('../fonts/CanelaDeck-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+  
+  @font-face {
+    font-family: 'Canela Deck';
+    src: url('../fonts/CanelaDeck-Bold.woff2') format('woff2'),
+         url('../fonts/CanelaDeck-Bold.woff') format('woff');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+  
+  @font-face {
+    font-family: 'Canela Deck';
+    src: url('../fonts/CanelaDeck-Light.woff2') format('woff2'),
+         url('../fonts/CanelaDeck-Light.woff') format('woff');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+  }
+  
+  @font-face {
+    font-family: 'Canela Text';
+    src: url('../fonts/CanelaText-Medium.woff2') format('woff2'),
+         url('../fonts/CanelaText-Medium.woff') format('woff');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+  }
+  
+  @font-face {
+    font-family: 'Canela Text';
+    src: url('../fonts/CanelaText-Light.woff2') format('woff2'),
+         url('../fonts/CanelaText-Light.woff') format('woff');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+  }
+  
+  @font-face {
+    font-family: 'Canela Text';
+    src: url('../fonts/CanelaText-LightItalic.woff2') format('woff2'),
+         url('../fonts/CanelaText-LightItalic.woff') format('woff');
+    font-weight: 300;
+    font-style: italic;
+    font-display: swap;
+  }
+
+  .canela-deck {
+    font-family: "Canela Deck", serif;
+  }
+
+  .canela-text {
+    font-family: "Canela Text", serif;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  @keyframes custom-pulse {
+    0%,
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.8;
+      transform: scale(1.1);
+    }
+  }
+
+  .animate-custom-pulse {
+    animation: custom-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  /* Dönen çember animasyonları */
+  @keyframes rotate {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes colorChange {
+    0%,
+    100% {
+      stroke: #235486; /* deep-blue */
+    }
+    33% {
+      stroke: #f0e2d5; /* warm-brown */
+    }
+    66% {
+      stroke: #b36f2e; /* soft-beige */
+    }
+  }
+
+  .rotating-circle {
+    transform-origin: center;
+    animation: rotate 10s linear infinite, colorChange 30s ease-in-out infinite;
+    stroke: #235486;
+  }
+
+  .rotating-circle-bg {
+    stroke: #235486;
+  }
+
+  @keyframes floating {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  /* Desktop'ta scroll animasyonu */
+  @media (min-width: 768px) {
+    .floating-image {
+      animation: floating 3s ease-in-out infinite;
+      will-change: transform;
+    }
+  }
+
+  /* Mobilde sabit pozisyon */
+  @media (max-width: 767px) {
+    .floating-image {
+      filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+    }
+  }
+
+  /* Scroll kontrolü için */
+  .no-scroll {
+    overflow: hidden;
+    height: 100vh;
+  }
+
+  /* Locomotive Scroll özelleştirmeleri */
+  html.has-scroll-smooth {
+    overflow: hidden;
+  }
+
+  /* Scroll container kontrolü */
+  [data-scroll-container] {
+    height: 100vh;
+    width: 100%;
+
+    &.scroll-active {
+      overflow: auto !important;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    &:not(.scroll-active) {
+      overflow: hidden;
+    }
+  }
+
+  /* Özel scrollbar stilleri */
+  body {
+    /* Firefox için scrollbar */
+    scrollbar-width: thin;
+    scrollbar-color: theme("colors.white") theme("colors.gray.300");
+  }
+
+  /* Webkit (Chrome, Safari, Edge) için scrollbar */
+  ::-webkit-scrollbar {
+    width: 4px; /* scrollbar genişliği */
+  }
+
+  ::-webkit-scrollbar-track {
+    background: theme("colors.gray.100");
+    border-radius: 32px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: theme("colors.deep-blue");
+    border-radius: 12px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: theme("colors.slate-blue");
+    border: 2px solid transparent;
+    background-clip: padding-box;
+  }
+
+  /* Locomotive scroll container için scrollbar'ı göster */
+  [data-scroll-container] {
+    overflow: auto !important; /* Locomotive'in overflow: hidden'ını override et */
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Loading durumunda scroll kontrolü */
+  &.loading {
+    overflow: hidden !important;
+    height: 100vh;
+  }
+}
+
+@layer components {
+  /* Yatay scroll için mobil/desktop ayarları */
+  .horizontal-scroll-section {
+    @apply overflow-hidden;
+  }
+
+  .horizontal-wrapper {
+    @apply w-full h-full;
+  }
+
+  .horizontal-slides {
+    @apply h-full;
+  }
+
+  /* Mobil için dikey scroll */
+  @media (max-width: 767px) {
+    .horizontal-scroll-section {
+      @apply h-auto overflow-visible;
+    }
+
+    .horizontal-wrapper {
+      @apply relative;
+    }
+
+    .horizontal-slides {
+      @apply flex flex-col;
+    }
+
+    .slide {
+      @apply min-h-screen w-full;
+    }
+  }
+}
+
+/* Özel scroll bar stili */
+[data-scroll-container]::-webkit-scrollbar {
+  width: 10px;
+}
+
+[data-scroll-container]::-webkit-scrollbar-track {
+  @apply bg-gray-100;
+}
+
+[data-scroll-container]::-webkit-scrollbar-thumb {
+  @apply bg-deep-blue rounded-full;
+}
+
+/* Locomotive scroll için temel stiller */
+.has-scroll-smooth {
+  @apply overflow-hidden;
+}
+
+.has-scroll-dragging {
+  @apply select-none;
+}
+
+.mast {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  background-color: #fff;
+}
+
+/* Ken Burns efekti için keyframes */
+@keyframes kenburns {
+  0% {
+    transform: scale(1) translate(0);
+  }
+  50% {
+    transform: scale(1.2) translate(1%, -1%);
+  }
+  100% {
+    transform: scale(1.1) translate(0);
+  }
+}
+
+/* mast__bg için Ken Burns efekti */
+.mast__bg {
+  position: absolute;
+  right: 0;
+  bottom: -100px;
+  width: 100%;
+  height: 100%;
+  background-size: contain;
+  background-position: right bottom;
+  background-repeat: no-repeat;
+  z-index: 1;
+  animation: kenburns 80s ease-in-out infinite;
+  transform-origin: center center;
+  will-change: transform;
+}
+
+.mast__header {
+  position: relative;
+  z-index: 2;
+  width: 50%;
+  padding-top: 4rem;
+  padding-right: 4rem;
+  color: #000;
+  text-align: left;
+}
+
+.mast__title {
+  font-size: 2.55rem;
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+}
+
+.mast__title strong {
+  color: #235486;
+}
+
+.mast__text {
+  font-size: 1.172rem;
+  line-height: 1.7;
+  color: #4a5568;
+}
+
+.sep {
+  width: 100px;
+  height: 3px;
+  background: #235486;
+  border: none;
+  margin: 2rem 0;
+}
+
+/* Mobil için düzenlemeler */
+@media (max-width: 768px) {
+  .sep{
+    margin: 1rem 0;
+  }
+  .mast {
+    flex-direction: column;
+    padding: 6rem 2rem 2rem 2rem;
+  }
+
+  .mast__header {
+    width: 100%;
+    padding: 0;
+    margin-bottom: 2rem;
+  }
+
+  .mast__bg {
+    position: absolute;
+    width: 100%;
+    height: 310px;
+    bottom: -90px;
+    animation-duration: 15s; /* Mobilde daha kısa süre */
+  }
+
+  .mast__title {
+    font-size: 2rem;
+  }
+
+  .mast__text {
+    font-size: 1.1135rem;
+  }
+}
+
+
+.slidein:nth-child(even) {
+  background: #3398ff !important;
+}
+
+.slidein:nth-child(odd) {
+  background: #007eff !important;
+}
+
+.hover-button {
+  cursor: pointer;
+  position: relative;
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 600;
+  overflow: hidden;
+  padding: 2rem 0 1rem;
+  display: inline-block;
+  border-radius: 4px;
+  max-width: 280px;
+  width: 100%;
+}
+.hover-button .ten {
+  font-size: 7px;
+  line-height: 52px;
+}
+.hover-button:hover .slidein {
+  left: 0%;
+}
+.hover-button .slidein {
+  background: #7385a1;
+  left: -100%;
+  z-index: 2;
+}
+.hover-button div {
+  text-transform: uppercase;
+  transition: left 300ms;
+  background: #5d708f;
+  position: absolute;
+  font-weight: 600;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  color: #ffffff;
+  line-height: 50px;
+}
+
+.hover-button .first {
+  background: #7385a1;
+}
+
+/* Header ve menü stilleri */
+.nav-link {
+    @apply text-gray-600 hover:text-deep-blue transition-colors duration-200 font-semibold;
+}
+
+.mobile-nav-link {
+    @apply block px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-deep-blue transition-all duration-200;
+}
+
+.mobile-dropdown.open .mobile-dropdown-content {
+    @apply block;
+}
+
+.mobile-dropdown.open svg {
+    @apply rotate-180;
+}
+
+.mobile-dropdown-content {
+    @apply hidden bg-gray-50;
+}
+
+/* Header scroll efekti */
+.header-scroll {
+    @apply shadow-md bg-white/95;
+}
+
+/* Mobil menü animasyonu */
+.mobile-menu-open {
+    @apply translate-x-0;
+}
+
+/* Mobil menü stilleri */
+#mobile-menu {
+  @apply fixed top-0 right-0 h-full bg-white transform translate-x-full transition-transform duration-300 ease-in-out md:hidden;
+  width: 300px;
+  box-shadow: -4px 0 15px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+  transform: translateX(100%);
+}
+
+/* Mobil menü overlay */
+.mobile-menu-overlay {
+  @apply fixed inset-0 bg-black/50 opacity-0 pointer-events-none transition-opacity duration-300 ease-in-out md:hidden;
+  z-index: 99;
+}
+
+.mobile-menu-overlay.active {
+  @apply opacity-100 pointer-events-auto;
+}
+
+/* Mobil menü içeriği */
+#mobile-menu nav {
+  @apply flex-1 overflow-y-auto;
+  height: calc(100vh - 60px);
+}
+
+/* Mobil menü header */
+#mobile-menu .flex.items-center.justify-between {
+  @apply sticky top-0 bg-white border-b;
+  height: 60px;
+}
+
+/* Mobil menü açık olduğunda */
+.mobile-menu-open {
+  transform: translateX(0) !important;
+}
+
+/* Mobil dropdown içeriği */
+.mobile-dropdown-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+}
+
+.mobile-dropdown.open .mobile-dropdown-content {
+  max-height: 500px;
+}
+
+/* Mobil menü linkleri */
+.mobile-nav-link {
+  @apply flex px-6 py-4 text-gray-600 hover:bg-gray-50 hover:text-deep-blue transition-all duration-200 border-b border-gray-100;
+}
+
+.mobile-dropdown .mobile-nav-link {
+  @apply border-b-0;
+}
+
+.mobile-dropdown-content .mobile-nav-link {
+  @apply bg-gray-50/50 pl-10;
+}
+
+/* Header stilleri */
+header {
+  @apply fixed top-0 left-0 w-full z-50 bg-white/90 backdrop-blur-sm shadow-sm;
+  transition: opacity 0.3s ease, transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Header'ın başlangıç durumu için stil */
+.initially-hidden {
+  opacity: 0;
+  transform: translateY(-20px);
+  pointer-events: none; /* Başlangıçta tıklanamaz olsun */
+}
+
+.container.out {
+  opacity: 0;
+}
+.fade {
+  transition: all 0.6s;
+}
+.fade.out {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+/* Fade animasyonu için buton özellikleri */
+#gercekler.fade {
+  transition: all 0.6s ease;
+}
+
+#gercekler.fade.out {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+/* Buton hover efekti */
+#gercekler:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(35, 84, 134, 0.2);
+}
+
+#gercekler:active {
+  transform: translateY(0);
+}
+
+
+.line {
+  transition: color 0.4s;
+}
+.line.visible {
+  color: #97879c;
+}
+
+/* İkinci section resim stilleri */
+#second-one .image-container {
+  @apply relative w-full shadow-xl rounded-lg overflow-hidden transition-transform duration-300;
+  padding-bottom: 133.33%; /* 3:4 aspect ratio */
+}
+
+#second-one .image-container:hover {
+  @apply transform -translate-y-1;
+}
+
+#second-one .image-container img {
+  @apply absolute inset-0 w-full h-full object-cover object-center;
+}
+
+/* Mobil görünüm için düzenlemeler */
+@media (max-width: 768px) {
+  #second-one .container {
+    @apply py-8 md:py-16;
+  }
+  
+  #second-one .image-container {
+    @apply w-4/5 mx-auto;
+  }
+}
+
+/* Fourth section stilleri */
+#fourth-one {
+  overflow: hidden;
+}
+
+#fourth-one .sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+
+/* Mobil görünüm için düzenlemeler */
+@media (max-width: 768px) {
+  #fourth-one .container {
+    @apply py-8;
+  }
+  
+  #fourth-one p {
+    font-size: 1.2rem;
+    line-height: 1.4;
+  }
+}
+
+/* Prose stilleri */
+.prose {
+  @apply text-gray-700;
+}
+
+.prose p {
+  @apply mb-6;
+}
+
+/* Progress bar stilleri */
+#progress-container {
+  @apply shadow-lg;
+  transform: translateY(100%);
+  transition: transform 0.3s ease-in-out;
+}
+
+#progress-container .container {
+  @apply relative;
+}
+
+/* Progress bar içindeki başlıkları ortalayalım */
+#progress-container .flex-1 span {
+  @apply left-1/2 -translate-x-1/2 whitespace-nowrap text-center;
+}
+
+/* Progress bar hover efektleri */
+#progress-container .flex-1:hover {
+  @apply cursor-pointer;
+}
+
+#progress-container .flex-1:hover .h-2 {
+  @apply bg-gray-300;
+}
+
+#progress-container .flex-1:hover span {
+  @apply text-deep-blue;
+}
+
+/* Responsive düzenlemeler */
+@media (max-width: 768px) {
+  #progress-container span {
+    @apply text-[10px] -top-5;
+  }
+  
+  #progress-container .flex {
+    @apply gap-0.5;
+  }
+  
+  #progress-container {
+    @apply py-2;
+  }
+}
+
+/* Kitap animasyonları */
+
+.perspective-container {
+  width: 100%;
+  height: 100%;
+  perspective: 1000px;
+  transform-style: preserve-3d;
+}
+.book-wrap {
+  height: 400px;
+  width: 100%;
+  transform-style: preserve-3d;
+  transition: all ease-out 0.6s;
+}
+.title {
+  content: "";
+  height: 400px;
+  width: 30px;
+  position: absolute;
+  right: 0;
+  left: -240px;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  background: #AB4747;
+  transform: rotateY(-80deg) translateX(-14px);
+}
+.book-back {
+  background-color: #D06255;
+  transform: rotate(180deg) translateZ(-30px) translateX(5px);
+}
+.book-back .text {
+  transform: rotateX(180deg);
+  position: absolute;
+  bottom: 15px;
+  padding: 0 20px;
+  text-align: left;
+}
+.rotate {
+  transform: rotateY(20deg);
+}
+.flip {
+  transform: rotateY(180deg);
+}
+
+/* Kitap Rafı Stilleri */
+.book-shelf {
+  height: 100px;
+  bottom: -5px;
+  transform: translateY(80%);
+  background: transparent;
+}
+
+.shelf {
+  width: 100%;
+  height: 30px;
+  background: linear-gradient(90deg, #4a5568, #718096);
+  border-radius: 2px;
+  position: relative;
+  z-index: 1;
+}
+
+.shelf::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(to right, #2d3748, #4a5568);
+    border-radius: 2px 2px 0 0;
+}
+
+.shelf-shadow {
+    width: 100%;
+    height: 30px;
+    background: rgba(0, 0, 0, 0.1);
+    position: absolute;
+    top: 30px;
+    left: 0;
+    transform-origin: top;
+    transform: skewX(5deg);
+    border-radius: 2px;
+    filter: blur(4px);
+}
+
+/* Kitapların alt kısmına gölge ekleyelim */
+.book-wrap {
+    position: relative;
+}
+
+.book-wrap::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    height: 10px;
+    background: rgba(0, 0, 0, 0.5);
+    filter: blur(4px);
+    border-radius: 50%;
+}
+@media (max-width: 768px) {
+  .book-wrap::after {
+    width: 60%;
+  }
+}
+.font-size-superXL{
+  font-size: 50px;
+}
+@media (max-width: 768px) {
+  .font-size-superXL{
+    font-size: 30px;
+  }
+}
+
